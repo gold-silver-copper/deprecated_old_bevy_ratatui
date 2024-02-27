@@ -1,5 +1,5 @@
 
-# `bevy_egui`
+# `bevy_ratatui`
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
 [![Documentation](https://docs.rs/bevy_ratatui/badge.svg)](https://docs.rs/bevy_ratatui/0.1.2/bevy_ratatui/)
