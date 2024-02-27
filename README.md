@@ -11,7 +11,7 @@ This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integra
 
 **Trying out:**
 
-An example WASM project is live at 
+An example WASM project is live at https://gold-silver-copper.github.io/ 
 
 **Features:**
 - Desktop and web platforms support
