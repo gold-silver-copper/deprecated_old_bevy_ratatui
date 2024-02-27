@@ -8,10 +8,11 @@
 [![Rust](https://github.com/gold-silver-copper/bevy_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bevy_ratatui/actions)
 
 This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integration for the [Bevy](https://github.com/bevyengine/bevy) game engine.
+This is my first rust contribution so please help with pull requests, and be aware that it's a bit buggy and unoptimized :D Breaking changes are quite likely in the near future.
 
 **Trying out:**
 
-An example WASM project is live at 
+An example WASM project is live at https://gold-silver-copper.github.io/ 
 
 **Features:**
 - Desktop and web platforms support
@@ -22,7 +23,7 @@ Just bevy and ratatui
 
 ## Usage
 
-See the examples hello_bevy and demo
+See the examples hello_bevy and demo (demo currently uses some weird unsafe stuff so its not very good to learn from)
 
 `cargo run --example hello_bevy --release`
 `cargo run --example demo --release`
