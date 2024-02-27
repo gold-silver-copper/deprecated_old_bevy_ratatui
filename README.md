@@ -22,7 +22,7 @@ Just bevy and ratatui
 
 ## Usage
 
-See the examples hello_bevy and demo
+See the examples hello_bevy and demo (demo currently uses some weird unsafe stuff so its not very good to learn from)
 
 `cargo run --example hello_bevy --release`
 `cargo run --example demo --release`
