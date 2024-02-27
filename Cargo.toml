@@ -20,7 +20,10 @@ exclude = [
 bevy = { version = "0.13.0",  default-features = true}
 ratatui = { version = "0.26.1",  default-features = false }
 
-
+[dev-dependencies]
+once_cell = { version = "1.19.0"}
+rand = "0.8.5"
+argh = "0.1.12"
 
 [[example]]
 name = "hello_bevy"
