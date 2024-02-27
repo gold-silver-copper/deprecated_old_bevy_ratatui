@@ -41,6 +41,21 @@ fn camera_and_terminal_setup(mut commands: Commands) {
 
     let mut my_terminal = Terminal::new(BevyBackend::default()).unwrap();
 
+    /*  You can specify which fonts to use as well as font size
+    
+     let mut my_terminal = Terminal::new(BevyBackend::new(
+        30,
+        30,
+        25,
+        "fonts/Iosevka-Regular.ttf",
+        "fonts/Iosevka-Oblique.ttf",
+        "fonts/Iosevka-Bold.ttf",
+        "fonts/Iosevka-BoldOblique.ttf",
+    ))
+    .unwrap();
+    
+     */
+
     my_terminal.clear();
 
     //Spawn entity with terminal component, you can then query for this entity to modify what is displayed, such as in terminal_draw
