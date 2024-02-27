@@ -40,8 +40,6 @@ pub fn run(ticky_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn 
 fn camera_setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 
-   
-
     let mut my_terminal = Terminal::new(BevyBackend::new(
         30,
         30,
@@ -50,24 +48,26 @@ fn camera_setup(mut commands: Commands) {
         "fonts/Iosevka-Oblique.ttf",
         "fonts/Iosevka-Bold.ttf",
         "fonts/Iosevka-BoldOblique.ttf",
-    )).unwrap();
-
-
+    ))
+    .unwrap();
 
     my_terminal.clear();
 
     my_terminal.show_cursor();
     // You can set manual_window_sizing to true if you dont want bevy_ratatui to manage window resizing for you
-   // my_terminal.backend_mut().manual_window_sizing(true);
+    // my_terminal.backend_mut().manual_window_sizing(true);
 
-    commands.spawn(TerminalComponent{ratatui_terminal:my_terminal});
+    commands.spawn(TerminalComponent {
+        ratatui_terminal: my_terminal,
+    });
 }
 
 fn terminal_draw(mut terminal_query: Query<(&mut TerminalComponent)>) {
     let mut ra = unsafe { get_ratapp() };
     let mut rat_term = &mut terminal_query
         .get_single_mut()
-        .expect("More than one terminal with a bevybackend").ratatui_terminal;
+        .expect("More than one terminal with a bevybackend")
+        .ratatui_terminal;
 
     let _ = rat_term.draw(|f| ui::draw(f, &mut ra));
 }

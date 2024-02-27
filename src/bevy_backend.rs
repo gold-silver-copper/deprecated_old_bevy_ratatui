@@ -421,36 +421,28 @@ fn handle_primary_window_resize(
     mut app_state: ResMut<NextState<TermState>>,
 ) {
     if let Ok((mut termy, nodik)) = terminal_query.get_single_mut() {
-
-
-
-
         for wr in resize_event.read() {
             let termy_backend = termy.ratatui_terminal.backend_mut();
 
             if !termy_backend.manual_window_sizing {
-
                 let node_size = nodik.size();
 
                 let w_wid = node_size.x;
                 let w_hei = node_size.y;
-    
+
                 let new_wid = (wr.width / w_wid) as u16;
                 let new_hei = (wr.height / w_hei) as u16;
-    
+
                 termy_backend.resize(new_wid as u16, new_hei as u16);
                 app_state.set(TermState::TermNeedsClearing);
-    
+
                 for mut window in windows.iter_mut() {
                     window.resolution =
                         WindowResolution::new(new_wid as f32 * w_wid, new_hei as f32 * w_hei);
-    
+
                     // Query returns one window typically.
                 }
-
             }
-
-        
         }
     }
 }
@@ -805,7 +797,7 @@ pub struct BevyBackend {
     italic_handle: Handle<Font>,
     bold_handle: Handle<Font>,
     italicbold_handle: Handle<Font>,
-    manual_window_sizing: bool
+    manual_window_sizing: bool,
 }
 
 impl Default for BevyBackend {
@@ -831,7 +823,7 @@ impl Default for BevyBackend {
             italic_handle: Handle::weak_from_u128(101),
             bold_handle: Handle::weak_from_u128(101),
             italicbold_handle: Handle::weak_from_u128(101),
-            manual_window_sizing: false
+            manual_window_sizing: false,
         }
     }
 }
@@ -868,7 +860,7 @@ impl BevyBackend {
             italic_handle: Handle::weak_from_u128(101),
             bold_handle: Handle::weak_from_u128(101),
             italicbold_handle: Handle::weak_from_u128(101),
-            manual_window_sizing: false
+            manual_window_sizing: false,
         }
     }
 
@@ -879,8 +871,8 @@ impl BevyBackend {
         self.height = height;
     }
 
-     /// Resizes the BevyBackend to the specified width and height.
-     pub fn manual_window_sizing(&mut self, value: bool) {
+    /// Resizes the BevyBackend to the specified width and height.
+    pub fn manual_window_sizing(&mut self, value: bool) {
         self.manual_window_sizing = value;
     }
 }

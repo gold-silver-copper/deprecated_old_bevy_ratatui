@@ -21,7 +21,6 @@ mod app;
 
 mod bevy;
 
-
 mod ui;
 
 /// Demo
@@ -38,8 +37,8 @@ struct Cli {
 fn main() -> Result<(), Box<dyn Error>> {
     let cli: Cli = argh::from_env();
     let tick_rate = Duration::from_millis(cli.tick_rate);
- 
+
     crate::bevy::run(tick_rate, cli.enhanced_graphics);
- 
+
     Ok(())
 }
