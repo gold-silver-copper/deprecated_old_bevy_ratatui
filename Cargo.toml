@@ -28,3 +28,8 @@ argh = "0.1.12"
 [[example]]
 name = "hello_bevy"
 doc-scrape-examples = true
+
+
+[[example]]
+name = "demo"
+doc-scrape-examples = false
