@@ -1,8 +1,18 @@
 [package]
 name = "bevy_ratatui"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-description = "A short description of my package"
+description = "Ratatui in bevy !! See examples . "
 license = "MIT OR Apache-2.0"
 
 [dependencies]
+
+
+bevy = { version = "0.13.0",  default-features = true}
+ratatui = { version = "0.26.1",  default-features = false }
+
+
+
+[[example]]
+name = "hello_bevy"
+doc-scrape-examples = true
