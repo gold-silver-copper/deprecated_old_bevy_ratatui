@@ -5,6 +5,15 @@ edition = "2021"
 description = "Ratatui in bevy !! See examples . "
 license = "MIT OR Apache-2.0"
 
+exclude = [
+  "assets/*",
+  ".github",
+  "Makefile.toml",
+  "CONTRIBUTING.md",
+  "*.log",
+  "tags",
+]
+
 [dependencies]
 
 
