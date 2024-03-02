@@ -30,6 +30,7 @@ See the examples hello_bevy and demo (demo currently uses some weird unsafe stuf
 
 ## See also
 
+
 For extra widgets:
 
 https://github.com/ratatui-org/awesome-ratatui
