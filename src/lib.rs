@@ -1,3 +1,3 @@
-mod bevy_backend;
+mod bracket_backend;
 
-pub use bevy_backend::{BevyBackend, RatatuiPlugin, TerminalComponent};
+pub use bracket_backend::BracketBackend;
