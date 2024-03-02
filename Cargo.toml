@@ -21,7 +21,7 @@ ratatui = { version = "0.26.1",  default-features = false }
 
 [dev-dependencies]
 once_cell = { version = "1.19.0"}
-rand = "0.8.5"
+rand =  { version = "0.8.5"}
 argh = "0.1.12"
 
 [[example]]

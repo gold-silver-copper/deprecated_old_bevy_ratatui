@@ -1,13 +1,13 @@
 
-# `bevy_ratatui`
+# `bracket_ratatui`
 
-[![Crates.io](https://img.shields.io/crates/v/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
-[![Documentation](https://docs.rs/bevy_ratatui/badge.svg)](https://docs.rs/bevy_ratatui/0.1.2/bevy_ratatui/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bevyengine/bevy/blob/master/LICENSE)
-[![Downloads](https://img.shields.io/crates/d/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
-[![Rust](https://github.com/gold-silver-copper/bevy_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bevy_ratatui/actions)
+[![Crates.io](https://img.shields.io/crates/v/bracket_ratatui.svg)](https://crates.io/crates/bracket_ratatui)
+[![Documentation](https://docs.rs/bracket_ratatui/badge.svg)](https://docs.rs/bracket_ratatui/0.1.2/bracket_ratatui/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bracketengine/bracket/blob/master/LICENSE)
+[![Downloads](https://img.shields.io/crates/d/bracket_ratatui.svg)](https://crates.io/crates/bracket_ratatui)
+[![Rust](https://github.com/gold-silver-copper/bracket_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bracket_ratatui/actions)
 
-This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integration for the [Bevy](https://github.com/bevyengine/bevy) game engine.
+This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integration for the [bracket](https://github.com/bracketengine/bracket) game engine.
 This is my first rust contribution so please help with pull requests, and be aware that it's a bit buggy and unoptimized :D Breaking changes are quite likely in the near future.
 
 **Trying out:**
@@ -19,13 +19,13 @@ An example WASM project is live at https://gold-silver-copper.github.io/
 
 ## Dependencies
 
-Just bevy and ratatui
+Just bracket and ratatui
 
 ## Usage
 
-See the examples hello_bevy and demo (demo currently uses some weird unsafe stuff so its not very good to learn from)
+See the examples hello_bracket and demo (demo currently uses some weird unsafe stuff so its not very good to learn from)
 
-`cargo run --example hello_bevy --release`
+`cargo run --example hello_bracket --release`
 `cargo run --example demo --release`
 
 ## See also
@@ -34,10 +34,10 @@ For extra widgets:
 
 https://github.com/ratatui-org/awesome-ratatui
 
-## Bevy support table
+## bracket support table
 
-**Note:** if you're looking for a `bevy_ratatui` version that supports `main` branch of Bevy, check out [open PRs](https://github.com/gold-silver-copper/bevy_ratatui/pulls), there's a great chance we've already started working on the future Bevy release support.
+**Note:** if you're looking for a `bracket_ratatui` version that supports `main` branch of bracket, check out [open PRs](https://github.com/gold-silver-copper/bracket_ratatui/pulls), there's a great chance we've already started working on the future bracket release support.
 
-| bevy | bevy_ratatui |
+| bracket | bracket_ratatui |
 |------|-----------|
 | 0.13 | 0.1      |
