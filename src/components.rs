@@ -80,8 +80,8 @@ impl CellComponent {
         }
     }
 
-    pub fn from_cell(cell: &Cell) -> Self {
-        CellComponent { cell: cell.clone() }
+    pub fn from_cell(cell: Cell) -> Self {
+        CellComponent { cell: cell }
     }
 
     pub fn fg(&self) -> BevyColor {

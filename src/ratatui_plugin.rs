@@ -303,7 +303,7 @@ fn init_virtual_cells(
             let ratcell = termy_backend.buffer.get(x, y);
             let vcell = commands
                 .spawn((
-                    CellComponent::from_cell(ratcell),
+                    CellComponent::from_cell(ratcell.clone()),
                     TextBundle::from_section(ratcell.symbol(), ns.clone()).with_style(Style {
                         top: Val::Px(y as f32 * node_size.y),
                         left: Val::Px(x as f32 * node_size.x),
@@ -337,7 +337,7 @@ fn update_ents_from_vcupdate(
             Some(wow) => {
                 commands
                     .entity(*wow)
-                    .insert(CellComponent::from_cell(&vc));
+                    .insert(CellComponent::from_cell(vc));
                 ()
             }
             None => (),
@@ -403,49 +403,60 @@ fn update_ents_from_comp(
     let termy = terminal_query
         .get_single()
         .expect("More than one terminal with a bevybackend");
-    let termy_backend = termy.ratatui_terminal.backend();
-    let fontsize = termy_backend.term_font_size as f32;
+
+    
 
     for (entity_id, cellii, stylik, sbo, rbo) in query_cells.iter() {
         if !cellii.skip() {
             let (proper_fg, proper_bg) = cellii.proper_fg_bg();
-            let mut ns = TextStyle::default();
+            
 
-            if (cellii.bold() && cellii.italic()) {
-                ns = termy.get_text_style(proper_fg.clone(), FontStyle::ItalicBold);
+            let ns = if (cellii.bold() && cellii.italic()) {
+                termy.get_text_style(proper_fg.clone(), FontStyle::ItalicBold)
             } else if (cellii.bold()) {
-                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Bold);
+                 termy.get_text_style(proper_fg.clone(), FontStyle::Bold)
             } else if (cellii.italic()) {
-                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Italic);
+                 termy.get_text_style(proper_fg.clone(), FontStyle::Italic)
             } else {
-                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Normal);
-            }
+                 termy.get_text_style(proper_fg.clone(), FontStyle::Normal)
+            };
 
-            if let Some(x) = sbo {
-                if !cellii.slow_blink() {
-                    commands.entity(entity_id).remove::<SlowBlink>();
-                }
-            } else if cellii.slow_blink() {
-                commands.entity(entity_id).insert(SlowBlink {
+
+
+            if cellii.slow_blink() {
+
+                if sbo.is_none() { commands.entity(entity_id).insert(SlowBlink {
                     in_blink: false,
                     true_color: proper_fg.clone(),
-                });
-            } else {
+                });}
+               
+            }
+            else{
+
                 commands.entity(entity_id).remove::<SlowBlink>();
+
+
+
             }
 
-            if let Some(x) = rbo {
-                if !cellii.rapid_blink() {
-                    commands.entity(entity_id).remove::<RapidBlink>();
-                }
-            } else if cellii.rapid_blink() {
-                commands.entity(entity_id).insert(RapidBlink {
+            if cellii.rapid_blink() {
+
+                if rbo.is_none() { commands.entity(entity_id).insert(RapidBlink {
                     in_blink: false,
                     true_color: proper_fg.clone(),
-                });
-            } else {
-                commands.entity(entity_id).remove::<RapidBlink>();
+                });}
+               
             }
+            else{
+
+                commands.entity(entity_id).remove::<RapidBlink>();
+
+
+
+            }
+
+
+
 
             commands.entity(entity_id).insert(
                 TextBundle::from_section(cellii.proper_symbol(), ns)
