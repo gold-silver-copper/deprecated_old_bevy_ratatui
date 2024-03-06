@@ -149,16 +149,16 @@ fn do_first_resize(
 }
 
 fn slow_blink_cells(
-    mut slow_blink_query: Query<((&mut Text, &mut BackgroundColor, &mut SlowBlink))>,
+    mut slow_blink_query: Query<((&mut Text, &BackgroundColor, &mut SlowBlink))>,
 ) {
-    for (mut text, mut bgc, mut sb) in slow_blink_query.iter_mut() {
+    for (mut text, bgc, mut sb) in slow_blink_query.iter_mut() {
         let mut section = text.sections.pop().unwrap();
 
-        let bg = bgc.0;
+       
 
         if sb.in_blink {
             sb.in_blink = false;
-            section.style.color = bg.clone();
+            section.style.color = bgc.0;
         } else {
             sb.in_blink = true;
             section.style.color = sb.true_color.clone();
@@ -169,16 +169,16 @@ fn slow_blink_cells(
 }
 
 fn rapid_blink_cells(
-    mut rapid_blink_query: Query<((&mut Text, &mut BackgroundColor, &mut RapidBlink))>,
+    mut rapid_blink_query: Query<((&mut Text, &BackgroundColor, &mut RapidBlink))>,
 ) {
-    for (mut text, mut bgc, mut sb) in rapid_blink_query.iter_mut() {
+    for (mut text, bgc, mut sb) in rapid_blink_query.iter_mut() {
         let mut section = text.sections.pop().unwrap();
 
-        let bg = bgc.0;
+        
 
         if sb.in_blink {
             sb.in_blink = false;
-            section.style.color = bg.clone();
+            section.style.color = bgc.0;
         } else {
             sb.in_blink = true;
             section.style.color = sb.true_color.clone();
@@ -336,7 +336,7 @@ fn update_ents_from_vcupdate(
         match boop.get(&xy) {
             Some(wow) => {
                 commands
-                    .entity(wow.clone())
+                    .entity(*wow)
                     .insert(CellComponent::from_cell(&vc));
                 ()
             }
