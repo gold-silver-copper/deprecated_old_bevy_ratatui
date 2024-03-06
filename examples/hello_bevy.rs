@@ -78,7 +78,8 @@ fn terminal_draw(mut terminal_query: Query<(&mut TerminalComponent)>, mut comman
         frame.render_widget(text::Line::from(text), area);
     });
 
-    // This hides UI nodes which would otherwise hide the sprite spawned by Bevy, note that normal you just want to set visibility to false, but this is more performant
+    // This hides UI nodes which would otherwise hide the sprite spawned by Bevy, note that normally you just want to set visibility to false, 
+    //but this is more performant
     for (pos, e) in rat_term.backend().entity_map.iter() {
         if pos.1 > 2 {
             commands.entity(e.clone()).retain::<CellComponent>();
