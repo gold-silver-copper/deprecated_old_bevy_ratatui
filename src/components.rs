@@ -3,14 +3,14 @@ use bevy::prelude::{default, Color as BevyColor, Component, Handle, TextStyle};
 use ratatui::{
     buffer::Cell,
     style::{Color as RatColor, Modifier},
-    terminal::Terminal as RatTerminal,
+    terminal::Terminal,
 };
 
 use crate::BevyBackend;
 
 #[derive(Component, Debug, Clone)]
 pub struct TerminalComponent {
-    pub ratatui_terminal: RatTerminal<BevyBackend>,
+    pub ratatui_terminal: Terminal<BevyBackend>,
 }
 
 pub enum FontStyle {
