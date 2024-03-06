@@ -120,7 +120,7 @@ fn do_first_resize(
         .get_single_mut()
         .expect("More than one terminal with a bevybackend");
 
-    let ns =termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Normal);
+    let ns = termy.get_text_style(BevyColor::DARK_GRAY, FontStyle::Normal);
 
     let rat_term = &mut termy.ratatui_terminal;
     let termy_backend = rat_term.backend_mut();
@@ -135,14 +135,12 @@ fn do_first_resize(
     //spawn the cursor
 
     let cursor_cell = commands
-        .spawn((
-            TextBundle::from_section(" ", ns).with_style(Style {
-                top: Val::Px(termy_backend.cursor_pos.1 as f32 * node_size.y),
-                left: Val::Px(termy_backend.cursor_pos.0 as f32 * node_size.x),
+        .spawn((TextBundle::from_section(" ", ns).with_style(Style {
+            top: Val::Px(termy_backend.cursor_pos.1 as f32 * node_size.y),
+            left: Val::Px(termy_backend.cursor_pos.0 as f32 * node_size.x),
 
-                ..default()
-            }),
-        ))
+            ..default()
+        }),))
         .id();
 
     termy_backend.cursor_ref = cursor_cell;
@@ -217,16 +215,14 @@ fn clear_virtual_cells(
         .get_single_mut()
         .expect("More than one terminal with a bevybackend");
 
-    let ns = termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Normal);
+    let ns = termy.get_text_style(BevyColor::DARK_GRAY, FontStyle::Normal);
     let rat_term = &mut termy.ratatui_terminal;
-    let  termy_backend = rat_term.backend_mut();
+    let termy_backend = rat_term.backend_mut();
 
     for (_, entity) in termy_backend.entity_map.iter() {
         commands.entity(*entity).despawn();
     }
     termy_backend.entity_map = HashMap::new();
-
-    
 
     // spawn a default node for the terminal to reference
     commands.entity(e).insert(
@@ -259,23 +255,19 @@ fn update_cursor(
     let (nodik, e, termy) = terminal_query
         .get_single()
         .expect("More than one terminal with a bevybackend");
-    let ns = termy.normal_style(BevyColor::GREEN, FontStyle::Normal);
+    let ns = termy.get_text_style(BevyColor::GREEN, FontStyle::Normal);
     let rat_term = &termy.ratatui_terminal;
     let termy_backend = rat_term.backend();
     let node_size = nodik.size();
 
-    
-
     commands
         .entity(termy_backend.cursor_ref)
-        .insert(
-            (TextBundle::from_section(" ", ns).with_style(Style {
-                top: Val::Px(termy_backend.cursor_pos.1 as f32 * node_size.y),
-                left: Val::Px(termy_backend.cursor_pos.0 as f32 * node_size.x),
+        .insert((TextBundle::from_section(" ", ns).with_style(Style {
+            top: Val::Px(termy_backend.cursor_pos.1 as f32 * node_size.y),
+            left: Val::Px(termy_backend.cursor_pos.0 as f32 * node_size.x),
 
-                ..default()
-            }),),
-        );
+            ..default()
+        }),));
 
     if termy_backend.cursor {
         commands
@@ -296,7 +288,7 @@ fn init_virtual_cells(
     let (nodik, e, mut termy) = terminal_query
         .get_single_mut()
         .expect("More than one terminal with a bevybackend");
-    let ns = termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Normal);
+    let ns = termy.get_text_style(BevyColor::DARK_GRAY, FontStyle::Normal);
     let rat_term = &mut termy.ratatui_terminal;
 
     let termy_backend = rat_term.backend_mut();
@@ -306,22 +298,18 @@ fn init_virtual_cells(
 
     let node_size = nodik.size();
 
-  
-
     for y in 0..rows {
         for x in 0..columns {
             let ratcell = termy_backend.buffer.get(x, y);
             let vcell = commands
                 .spawn((
                     CellComponent::from_cell(ratcell),
-                    TextBundle::from_section(ratcell.symbol(), ns.clone()).with_style(
-                        Style {
-                            top: Val::Px(y as f32 * node_size.y),
-                            left: Val::Px(x as f32 * node_size.x),
+                    TextBundle::from_section(ratcell.symbol(), ns.clone()).with_style(Style {
+                        top: Val::Px(y as f32 * node_size.y),
+                        left: Val::Px(x as f32 * node_size.x),
 
-                            ..default()
-                        },
-                    ),
+                        ..default()
+                    }),
                 ))
                 .id();
 
@@ -414,27 +402,24 @@ fn update_ents_from_comp(
 ) {
     let termy = terminal_query
         .get_single()
-        .expect("More than one terminal with a bevybackend")
-        ;
-
-    
+        .expect("More than one terminal with a bevybackend");
+    let termy_backend = termy.ratatui_terminal.backend();
+    let fontsize = termy_backend.term_font_size as f32;
 
     for (entity_id, cellii, stylik, sbo, rbo) in query_cells.iter() {
         if !cellii.skip() {
-            
-
-
-            let ns = if (cellii.bold() && cellii.italic()) {
-                termy.normal_style(BevyColor::DARK_GRAY, FontStyle::ItalicBold)
-            } else if (cellii.bold()) {
-                 termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Bold)
-            } else if (cellii.italic()) {
-                 termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Italic)
-            } else {
-                termy.normal_style(BevyColor::DARK_GRAY, FontStyle::Normal)
-            };
-
             let (proper_fg, proper_bg) = cellii.proper_fg_bg();
+            let mut ns = TextStyle::default();
+
+            if (cellii.bold() && cellii.italic()) {
+                ns = termy.get_text_style(proper_fg.clone(), FontStyle::ItalicBold);
+            } else if (cellii.bold()) {
+                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Bold);
+            } else if (cellii.italic()) {
+                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Italic);
+            } else {
+                ns = termy.get_text_style(proper_fg.clone(), FontStyle::Normal);
+            }
 
             if let Some(x) = sbo {
                 if !cellii.slow_blink() {
@@ -461,8 +446,6 @@ fn update_ents_from_comp(
             } else {
                 commands.entity(entity_id).remove::<RapidBlink>();
             }
-
-         
 
             commands.entity(entity_id).insert(
                 TextBundle::from_section(cellii.proper_symbol(), ns)

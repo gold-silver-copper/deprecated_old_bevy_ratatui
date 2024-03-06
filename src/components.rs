@@ -1,4 +1,4 @@
-use bevy::prelude::{default, Color as BevyColor, Component, TextStyle , Handle};
+use bevy::prelude::{default, Color as BevyColor, Component, Handle, TextStyle};
 
 use ratatui::{
     buffer::Cell,
@@ -11,19 +11,17 @@ use crate::BevyBackend;
 #[derive(Component, Debug, Clone)]
 pub struct TerminalComponent {
     pub ratatui_terminal: RatTerminal<BevyBackend>,
-    
 }
 
 pub enum FontStyle {
     Normal,
     Bold,
     Italic,
-    ItalicBold
+    ItalicBold,
 }
 
-
 impl TerminalComponent {
-    pub fn normal_style(&self , color: BevyColor, font_style: FontStyle) -> TextStyle {
+    pub fn get_text_style(&self, color: BevyColor, font_style: FontStyle) -> TextStyle {
         let rat_term = &self.ratatui_terminal;
         let termy_backend = rat_term.backend();
 
@@ -32,10 +30,6 @@ impl TerminalComponent {
             FontStyle::Bold => termy_backend.bold_handle.clone(),
             FontStyle::Italic => termy_backend.italic_handle.clone(),
             FontStyle::ItalicBold => termy_backend.italicbold_handle.clone(),
-
-
-
-
         };
 
         if boop != Handle::weak_from_u128(101) {
