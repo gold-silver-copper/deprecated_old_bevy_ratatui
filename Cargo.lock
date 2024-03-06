@@ -773,7 +773,7 @@ checksum = "86afa4a88ee06b10fe1e6f28a796ba2eedd16804717cbbb911df0cbb0cd6677b"
 
 [[package]]
 name = "bevy_ratatui"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "argh",
  "bevy",
