@@ -15,8 +15,7 @@ use ratatui::{
     style::{Color as RatColor, Modifier},
 };
 
-use crate::components::FromRatCell;
-use crate::VirtualCell;
+use crate::CellComponent;
 
 ///RATATUI SPECIFIC STUFF STARTS HERE
 ///
@@ -35,7 +34,7 @@ pub struct BevyBackend {
     pub entity_map: HashMap<(u16, u16), Entity>,
     pub buffer: Buffer,
 
-    pub vcupdate: Vec<(u16, u16, VirtualCell)>,
+    pub vcupdate: Vec<(u16, u16, Cell)>,
     pub cursor_ref: Entity,
 
     pub cursor: bool,
@@ -135,9 +134,7 @@ impl Backend for BevyBackend {
         I: Iterator<Item = (u16, u16, &'a Cell)>,
     {
         for (x, y, c) in content {
-            let vc = VirtualCell::to_virtual(x, y, c);
-
-            self.vcupdate.push((x, y, vc));
+            self.vcupdate.push((x, y, c.clone()));
 
             let cell = self.buffer.get_mut(x, y);
             *cell = c.clone();

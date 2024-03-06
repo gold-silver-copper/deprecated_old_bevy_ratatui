@@ -7,8 +7,7 @@ use bevy::{
     window::{PrimaryWindow, WindowResized, WindowResolution},
 };
 
-use crate::components::FromRatCell;
-use crate::components::{RapidBlink, SlowBlink, TerminalComponent, VirtualCell};
+use crate::components::{CellComponent, RapidBlink, SlowBlink, TerminalComponent};
 use crate::BevyBackend;
 
 ///Provides Bevy Plugin which creates terminal like window supporting Ratatui
@@ -166,26 +165,26 @@ fn do_first_resize(
     resize_state.set(TermSizing::TermGood);
 }
 
-fn slow_blink_cells(mut slow_blink_query: Query<((&mut VirtualCell, &mut SlowBlink))>) {
+fn slow_blink_cells(mut slow_blink_query: Query<((&mut CellComponent, &mut SlowBlink))>) {
     for (mut vc, mut sb) in slow_blink_query.iter_mut() {
         if sb.in_blink {
             sb.in_blink = false;
-            vc.fg = vc.bg.clone();
+            vc.cell.fg = vc.cell.bg.clone();
         } else {
             sb.in_blink = true;
-            vc.fg = sb.true_color.clone();
+            vc.cell.fg = sb.true_color.clone();
         }
     }
 }
 
-fn rapid_blink_cells(mut rapid_blink_query: Query<((&mut VirtualCell, &mut RapidBlink))>) {
+fn rapid_blink_cells(mut rapid_blink_query: Query<((&mut CellComponent, &mut RapidBlink))>) {
     for (mut vc, mut rb) in rapid_blink_query.iter_mut() {
         if rb.in_blink {
             rb.in_blink = false;
-            vc.fg = vc.bg.clone();
+            vc.cell.fg = vc.cell.bg.clone();
         } else {
             rb.in_blink = true;
-            vc.fg = rb.true_color.clone();
+            vc.cell.fg = rb.true_color.clone();
         }
     }
 }
@@ -358,7 +357,7 @@ fn init_virtual_cells(
             let ratcell = termy_backend.buffer.get(x, y);
             let vcell = commands
                 .spawn((
-                    VirtualCell::to_virtual(x, y, ratcell),
+                    CellComponent::from_cell(x, y, ratcell),
                     TextBundle::from_section(ratcell.symbol(), waat.clone()).with_style(Style {
                         top: Val::Px(y as f32 * node_size.y),
                         left: Val::Px(x as f32 * node_size.x),
@@ -387,10 +386,12 @@ fn update_ents_from_vcupdate(
     let boop = termy_backend.entity_map.clone();
 
     while let Some((x, y, vc)) = termy_backend.vcupdate.pop() {
-        let xy = (x, y);
+        let xy = (x.clone(), y.clone());
         match boop.get(&xy) {
             Some(wow) => {
-                commands.entity(wow.clone()).insert(vc);
+                commands
+                    .entity(wow.clone())
+                    .insert(CellComponent::from_cell(x, y, &vc));
                 ()
             }
             None => (),
@@ -444,11 +445,11 @@ fn update_ents_from_comp(
         (
             Entity,
             &Node,
-            &VirtualCell,
+            &CellComponent,
             Option<&SlowBlink>,
             Option<&RapidBlink>,
         ),
-        (Changed<VirtualCell>),
+        (Changed<CellComponent>),
     >,
     mut commands: Commands,
     terminal_query: Query<((&TerminalComponent))>,
@@ -461,24 +462,24 @@ fn update_ents_from_comp(
     let fontsize = termy_backend.term_font_size as f32;
 
     for (entity_id, nodik, cellii, sbo, rbo) in query_cells.iter() {
-        if !cellii.skip {
+        if !cellii.skip() {
             let node_size = nodik.size();
 
             let mut proper_font = Handle::weak_from_u128(101);
 
             let mut no_font = true;
 
-            if (cellii.bold && cellii.italic) {
+            if (cellii.bold() && cellii.italic()) {
                 if termy_backend.italicbold_font_path != "" {
                     no_font = false
                 }
                 proper_font = termy_backend.italicbold_handle.clone();
-            } else if (cellii.bold) {
+            } else if (cellii.bold()) {
                 if termy_backend.bold_font_path != "" {
                     no_font = false
                 }
                 proper_font = termy_backend.bold_handle.clone();
-            } else if (cellii.italic) {
+            } else if (cellii.italic()) {
                 if termy_backend.italic_font_path != "" {
                     no_font = false
                 }
@@ -490,27 +491,27 @@ fn update_ents_from_comp(
                 proper_font = termy_backend.normal_handle.clone();
             }
 
-            let mut proper_value = cellii.symbol.clone();
+            let mut proper_value = cellii.cell.symbol().to_string();
 
-            if cellii.underlined {
+            if cellii.underlined() {
                 proper_value = format!("{}{}", proper_value, '\u{0332}');
             }
 
-            if cellii.crossed_out {
+            if cellii.crossed_out() {
                 proper_value = format!("{}{}", proper_value, '\u{0336}');
             }
 
-            let mut proper_fg = cellii.fg;
+            let mut proper_fg = cellii.fg();
 
-            let mut proper_bg = cellii.bg;
+            let mut proper_bg = cellii.bg();
 
-            if cellii.reversed {
+            if cellii.reversed() {
                 let col_buf = proper_fg.clone();
                 proper_fg = proper_bg;
                 proper_bg = col_buf;
             }
 
-            if cellii.dim {
+            if cellii.dim() {
                 let fg_l = proper_fg.l();
                 let bg_l = proper_bg.l();
                 proper_fg.set_l(fg_l * 0.9);
@@ -518,32 +519,32 @@ fn update_ents_from_comp(
             }
 
             if let Some(x) = sbo {
-                if !cellii.slow_blink {
+                if !cellii.slow_blink() {
                     commands.entity(entity_id).remove::<SlowBlink>();
                 }
-            } else if cellii.slow_blink {
+            } else if cellii.slow_blink() {
                 commands.entity(entity_id).insert(SlowBlink {
                     in_blink: false,
-                    true_color: proper_fg.clone(),
+                    true_color: cellii.cell.fg.clone(),
                 });
             } else {
                 commands.entity(entity_id).remove::<SlowBlink>();
             }
 
             if let Some(x) = rbo {
-                if !cellii.rapid_blink {
+                if !cellii.rapid_blink() {
                     commands.entity(entity_id).remove::<RapidBlink>();
                 }
-            } else if cellii.rapid_blink {
+            } else if cellii.rapid_blink() {
                 commands.entity(entity_id).insert(RapidBlink {
                     in_blink: false,
-                    true_color: proper_fg.clone(),
+                    true_color: cellii.cell.fg.clone(),
                 });
             } else {
                 commands.entity(entity_id).remove::<RapidBlink>();
             }
 
-            if cellii.hidden {
+            if cellii.hidden() {
                 proper_fg = proper_bg.clone();
             }
 

@@ -4,5 +4,5 @@ mod ratatui_plugin;
 
 pub use bevy_backend::BevyBackend;
 
-pub use components::{RapidBlink, SlowBlink, TerminalComponent, VirtualCell};
+pub use components::{CellComponent, RapidBlink, SlowBlink, TerminalComponent};
 pub use ratatui_plugin::RatatuiPlugin;

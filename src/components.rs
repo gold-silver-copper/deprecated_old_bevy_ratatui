@@ -16,7 +16,7 @@ pub struct TerminalComponent {
 #[derive(Component, Debug, Clone, PartialEq)]
 pub struct SlowBlink {
     pub in_blink: bool,
-    pub true_color: BevyColor,
+    pub true_color: RatColor,
 }
 
 #[derive(Component, Debug, Clone, PartialEq)]
@@ -27,88 +27,80 @@ pub struct Cursor {
 #[derive(Component, Debug, Clone, PartialEq)]
 pub struct RapidBlink {
     pub in_blink: bool,
-    pub true_color: BevyColor,
+    pub true_color: RatColor,
 }
 
-#[derive(Component, Debug, Clone, PartialEq)]
-pub struct VirtualCell {
-    pub symbol: String,
-    pub fg: BevyColor,
-    pub bg: BevyColor,
-    pub underline_color: BevyColor,
-
-    pub skip: bool,
-
-    pub bold: bool,
-    pub dim: bool,
-    pub italic: bool,
-    pub underlined: bool,
-    pub slow_blink: bool,
-    pub rapid_blink: bool,
-    pub reversed: bool,
-    pub hidden: bool,
-    pub crossed_out: bool,
-
+#[derive(Component, Debug, Clone)]
+pub struct CellComponent {
+    pub cell: Cell,
     pub row: u16,
     pub column: u16,
 }
 
-impl VirtualCell {
+impl CellComponent {
     pub fn new(x: u16, y: u16) -> Self {
-        VirtualCell {
-            symbol: "╬".to_string(),
-            fg: bevy::prelude::Color::WHITE,
-            bg: bevy::prelude::Color::BLACK,
-            underline_color: bevy::prelude::Color::WHITE,
-            skip: false,
-            italic: false,
-            underlined: false,
-            bold: false,
-
-            crossed_out: false,
-
+        CellComponent {
+            cell: Cell::default(),
             row: y,
             column: x,
-
-            dim: false,
-            reversed: false,
-
-            slow_blink: false,
-            rapid_blink: false,
-
-            hidden: false,
         }
     }
-}
 
-pub trait FromRatCell {
-    fn to_virtual(x: u16, y: u16, given_cell: &Cell) -> VirtualCell;
-}
-
-impl FromRatCell for VirtualCell {
-    fn to_virtual(x: u16, y: u16, given_cell: &Cell) -> VirtualCell {
-        VirtualCell {
-            symbol: given_cell.symbol().into(),
-            fg: BevyColor::from_rat_color(given_cell.fg, true),
-            bg: BevyColor::from_rat_color(given_cell.bg, false),
-            //    #[cfg(not(feature = "underline-color"))]
-            underline_color: BevyColor::from_rat_color(given_cell.fg, true),
-            //    #[cfg(feature = "underline-color")]
-            //   underline_color: BevyColor::from_rat_color(given_cell.underline_color, true),
-            bold: given_cell.modifier.intersects(Modifier::BOLD),
-            dim: given_cell.modifier.intersects(Modifier::DIM),
-            italic: given_cell.modifier.intersects(Modifier::ITALIC),
-            underlined: given_cell.modifier.intersects(Modifier::UNDERLINED),
-            slow_blink: given_cell.modifier.intersects(Modifier::SLOW_BLINK),
-            rapid_blink: given_cell.modifier.intersects(Modifier::RAPID_BLINK),
-            reversed: given_cell.modifier.intersects(Modifier::REVERSED),
-            hidden: given_cell.modifier.intersects(Modifier::HIDDEN),
-            crossed_out: given_cell.modifier.intersects(Modifier::CROSSED_OUT), /* FIX this SHOULD NOT BE ALL FALSE */
-
-            skip: given_cell.skip,
+    pub fn from_cell(x: u16, y: u16, cell: &Cell) -> Self {
+        CellComponent {
+            cell: cell.clone(),
             row: y,
             column: x,
         }
+    }
+
+    pub fn set_fg_to_bg() {}
+
+    pub fn fg(&self) -> BevyColor {
+        BevyColor::from_rat_color(self.cell.fg, true)
+    }
+
+    pub fn bg(&self) -> BevyColor {
+        BevyColor::from_rat_color(self.cell.bg, false)
+    }
+
+    pub fn bold(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::BOLD)
+    }
+    pub fn dim(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::DIM)
+    }
+    pub fn italic(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::ITALIC)
+    }
+    pub fn underlined(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::UNDERLINED)
+    }
+    pub fn slow_blink(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::SLOW_BLINK)
+    }
+
+    pub fn rapid_blink(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::RAPID_BLINK)
+    }
+    pub fn reversed(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::REVERSED)
+    }
+    pub fn hidden(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::HIDDEN)
+    }
+    pub fn crossed_out(&self) -> bool {
+        self.cell.modifier.intersects(Modifier::CROSSED_OUT)
+    }
+    pub fn skip(&self) -> bool {
+        self.cell.skip
+    }
+
+    pub fn x(&self) -> u16 {
+        self.column
+    }
+    pub fn y(&self) -> u16 {
+        self.row
     }
 }
 
