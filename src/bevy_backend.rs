@@ -3,18 +3,13 @@
 
 use std::io;
 
-use bevy::{
-    prelude::{ *},
-    utils::{ HashMap},
-};
+use bevy::{prelude::*, utils::HashMap};
 
 use ratatui::{
     backend::{Backend, ClearType, WindowSize},
     buffer::{Buffer, Cell},
     layout::{Rect, Size},
-  
 };
-
 
 ///RATATUI SPECIFIC STUFF STARTS HERE
 ///
@@ -133,17 +128,19 @@ impl Backend for BevyBackend {
         I: Iterator<Item = (u16, u16, &'a Cell)>,
     {
         for (x, y, c) in content {
-            self.vcupdate.push((x, y, c.clone()));
+            if !c.skip {self.vcupdate.push((x, y, c.clone()));
+                let cell = self.buffer.get_mut(x, y);
+                *cell = c.clone();
+    
+                // println!("{} {}", x, y);
+                //  println!("{:?}", c);}
+            
 
-            let cell = self.buffer.get_mut(x, y);
-            *cell = c.clone();
-
-            // println!("{} {}", x, y);
-            //  println!("{:?}", c);
-        }
+          
+        }}
         Ok(())
+    
     }
-
     fn hide_cursor(&mut self) -> Result<(), io::Error> {
         self.cursor = false;
         Ok(())

@@ -43,7 +43,7 @@ fn camera_setup(mut commands: Commands) {
     let mut my_terminal = Terminal::new(BevyBackend::new(
         30,
         30,
-        25,
+        50,
         "fonts/Iosevka-Regular.ttf",
         "fonts/Iosevka-Oblique.ttf",
         "fonts/Iosevka-Bold.ttf",

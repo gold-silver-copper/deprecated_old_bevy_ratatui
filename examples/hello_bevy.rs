@@ -16,7 +16,7 @@
 use bevy::{app::AppExit, prelude::*};
 use ratatui::{prelude::*, text::*, widgets::*};
 
-use bevy_ratatui::{BevyBackend, RatatuiPlugin, TerminalComponent, CellComponent};
+use bevy_ratatui::{BevyBackend, CellComponent, RatatuiPlugin, TerminalComponent};
 
 /// This is a bare minimum example. There are many approaches to running a bevy program, so
 /// this is not meant to be prescriptive. It is only meant to demonstrate the basic setup and
@@ -78,7 +78,7 @@ fn terminal_draw(mut terminal_query: Query<(&mut TerminalComponent)>, mut comman
         frame.render_widget(text::Line::from(text), area);
     });
 
-    // This hides UI nodes which would otherwise hide the sprite spawned by Bevy, note that normally you just want to set visibility to false, 
+    // This hides UI nodes which would otherwise hide the sprite spawned by Bevy, note that normally you just want to set visibility to false,
     //but this is more performant
     for (pos, e) in rat_term.backend().entity_map.iter() {
         if pos.1 > 2 {

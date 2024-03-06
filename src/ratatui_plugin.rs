@@ -1,5 +1,3 @@
-
-
 use bevy::{
     prelude::{Color as BevyColor, *},
     time::common_conditions::on_timer,
@@ -148,13 +146,9 @@ fn do_first_resize(
     resize_state.set(TermSizing::TermGood);
 }
 
-fn slow_blink_cells(
-    mut slow_blink_query: Query<((&mut Text, &BackgroundColor, &mut SlowBlink))>,
-) {
+fn slow_blink_cells(mut slow_blink_query: Query<((&mut Text, &BackgroundColor, &mut SlowBlink))>) {
     for (mut text, bgc, mut sb) in slow_blink_query.iter_mut() {
         let mut section = text.sections.pop().unwrap();
-
-       
 
         if sb.in_blink {
             sb.in_blink = false;
@@ -173,8 +167,6 @@ fn rapid_blink_cells(
 ) {
     for (mut text, bgc, mut sb) in rapid_blink_query.iter_mut() {
         let mut section = text.sections.pop().unwrap();
-
-        
 
         if sb.in_blink {
             sb.in_blink = false;
@@ -335,9 +327,7 @@ fn update_ents_from_vcupdate(
         let xy = (x.clone(), y.clone());
         match boop.get(&xy) {
             Some(wow) => {
-                commands
-                    .entity(*wow)
-                    .insert(CellComponent::from_cell(vc));
+                commands.entity(*wow).insert(CellComponent::from_cell(vc));
                 ()
             }
             None => (),
@@ -404,59 +394,41 @@ fn update_ents_from_comp(
         .get_single()
         .expect("More than one terminal with a bevybackend");
 
-    
-
     for (entity_id, cellii, stylik, sbo, rbo) in query_cells.iter() {
-        if !cellii.skip() {
+       
             let (proper_fg, proper_bg) = cellii.proper_fg_bg();
-            
 
             let ns = if (cellii.bold() && cellii.italic()) {
                 termy.get_text_style(proper_fg.clone(), FontStyle::ItalicBold)
             } else if (cellii.bold()) {
-                 termy.get_text_style(proper_fg.clone(), FontStyle::Bold)
+                termy.get_text_style(proper_fg.clone(), FontStyle::Bold)
             } else if (cellii.italic()) {
-                 termy.get_text_style(proper_fg.clone(), FontStyle::Italic)
+                termy.get_text_style(proper_fg.clone(), FontStyle::Italic)
             } else {
-                 termy.get_text_style(proper_fg.clone(), FontStyle::Normal)
+                termy.get_text_style(proper_fg.clone(), FontStyle::Normal)
             };
 
-
-
             if cellii.slow_blink() {
-
-                if sbo.is_none() { commands.entity(entity_id).insert(SlowBlink {
-                    in_blink: false,
-                    true_color: proper_fg.clone(),
-                });}
-               
-            }
-            else{
-
+                if sbo.is_none() {
+                    commands.entity(entity_id).insert(SlowBlink {
+                        in_blink: false,
+                        true_color: proper_fg.clone(),
+                    });
+                }
+            } else {
                 commands.entity(entity_id).remove::<SlowBlink>();
-
-
-
             }
 
             if cellii.rapid_blink() {
-
-                if rbo.is_none() { commands.entity(entity_id).insert(RapidBlink {
-                    in_blink: false,
-                    true_color: proper_fg.clone(),
-                });}
-               
-            }
-            else{
-
+                if rbo.is_none() {
+                    commands.entity(entity_id).insert(RapidBlink {
+                        in_blink: false,
+                        true_color: proper_fg.clone(),
+                    });
+                }
+            } else {
                 commands.entity(entity_id).remove::<RapidBlink>();
-
-
-
             }
-
-
-
 
             commands.entity(entity_id).insert(
                 TextBundle::from_section(cellii.proper_symbol(), ns)
@@ -464,7 +436,7 @@ fn update_ents_from_comp(
                     .with_text_justify(JustifyText::Center)
                     .with_style(stylik.clone()),
             );
-        }
+        
     }
 }
 
