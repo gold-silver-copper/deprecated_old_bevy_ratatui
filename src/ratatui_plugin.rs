@@ -165,27 +165,50 @@ fn do_first_resize(
     resize_state.set(TermSizing::TermGood);
 }
 
-fn slow_blink_cells(mut slow_blink_query: Query<((&mut CellComponent, &mut SlowBlink))>) {
-    for (mut vc, mut sb) in slow_blink_query.iter_mut() {
+fn slow_blink_cells(mut slow_blink_query: Query<((&mut Text,&mut BackgroundColor, &mut SlowBlink))>) {
+    for (mut text,mut bgc, mut sb) in slow_blink_query.iter_mut() {
+
+        let mut section =text.sections.pop().unwrap();
+        
+        let bg = bgc.0;
+
+
+
         if sb.in_blink {
             sb.in_blink = false;
-            vc.cell.fg = vc.cell.bg.clone();
+            section.style.color = bg.clone();
         } else {
             sb.in_blink = true;
-            vc.cell.fg = sb.true_color.clone();
+            section.style.color = sb.true_color.clone();
         }
+
+        text.sections.push(section);
     }
 }
 
-fn rapid_blink_cells(mut rapid_blink_query: Query<((&mut CellComponent, &mut RapidBlink))>) {
-    for (mut vc, mut rb) in rapid_blink_query.iter_mut() {
-        if rb.in_blink {
-            rb.in_blink = false;
-            vc.cell.fg = vc.cell.bg.clone();
+
+
+
+
+
+fn rapid_blink_cells(mut rapid_blink_query: Query<((&mut Text,&mut BackgroundColor, &mut RapidBlink))>) {
+    for (mut text,mut bgc, mut sb) in rapid_blink_query.iter_mut() {
+
+        let mut section =text.sections.pop().unwrap();
+        
+        let bg = bgc.0;
+
+
+
+        if sb.in_blink {
+            sb.in_blink = false;
+            section.style.color = bg.clone();
         } else {
-            rb.in_blink = true;
-            vc.cell.fg = rb.true_color.clone();
+            sb.in_blink = true;
+            section.style.color = sb.true_color.clone();
         }
+
+        text.sections.push(section);
     }
 }
 
@@ -494,22 +517,9 @@ fn update_ents_from_comp(
 
            
 
-            let mut proper_fg = cellii.fg();
-
-            let mut proper_bg = cellii.bg();
-
-            if cellii.reversed() {
-                let col_buf = proper_fg.clone();
-                proper_fg = proper_bg;
-                proper_bg = col_buf;
-            }
-
-            if cellii.dim() {
-                let fg_l = proper_fg.l();
-                let bg_l = proper_bg.l();
-                proper_fg.set_l(fg_l * 0.9);
-                proper_bg.set_l(bg_l * 0.9);
-            }
+            
+            let (proper_fg,proper_bg) = cellii.proper_fg_bg();
+            
 
             if let Some(x) = sbo {
                 if !cellii.slow_blink() {
@@ -518,7 +528,7 @@ fn update_ents_from_comp(
             } else if cellii.slow_blink() {
                 commands.entity(entity_id).insert(SlowBlink {
                     in_blink: false,
-                    true_color: cellii.cell.fg.clone(),
+                    true_color: proper_fg.clone(),
                 });
             } else {
                 commands.entity(entity_id).remove::<SlowBlink>();
@@ -531,15 +541,13 @@ fn update_ents_from_comp(
             } else if cellii.rapid_blink() {
                 commands.entity(entity_id).insert(RapidBlink {
                     in_blink: false,
-                    true_color: cellii.cell.fg.clone(),
+                    true_color: proper_fg.clone(),
                 });
             } else {
                 commands.entity(entity_id).remove::<RapidBlink>();
             }
 
-            if cellii.hidden() {
-                proper_fg = proper_bg.clone();
-            }
+           
 
             let mut waat = TextStyle::default();
 

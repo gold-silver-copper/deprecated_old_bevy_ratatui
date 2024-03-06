@@ -16,7 +16,7 @@ pub struct TerminalComponent {
 #[derive(Component, Debug, Clone, PartialEq)]
 pub struct SlowBlink {
     pub in_blink: bool,
-    pub true_color: RatColor,
+    pub true_color: BevyColor,
 }
 
 #[derive(Component, Debug, Clone, PartialEq)]
@@ -27,7 +27,7 @@ pub struct Cursor {
 #[derive(Component, Debug, Clone, PartialEq)]
 pub struct RapidBlink {
     pub in_blink: bool,
-    pub true_color: RatColor,
+    pub true_color: BevyColor,
 }
 
 #[derive(Component, Debug, Clone)]
@@ -104,6 +104,38 @@ impl CellComponent {
 
 
     }
+
+    pub fn proper_fg_bg(&self) -> (BevyColor,BevyColor) {
+
+        let mut proper_fg = self.fg();
+        let mut proper_bg = self.bg();
+
+
+
+        if self.reversed() {
+            let col_buf = proper_fg.clone();
+            proper_fg = proper_bg;
+            proper_bg = col_buf;
+        }
+
+        if self.dim() {
+            let fg_l = proper_fg.l();
+            let bg_l = proper_bg.l();
+            proper_fg.set_l(fg_l * 0.9);
+            proper_bg.set_l(bg_l * 0.9);
+        }
+
+        if self.hidden() {
+            proper_fg = proper_bg.clone();
+        }
+
+        (proper_fg,proper_bg)
+
+        
+    }
+
+
+
 
  
 }
