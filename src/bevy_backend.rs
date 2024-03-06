@@ -5,9 +5,7 @@ use std::io;
 
 use bevy::{
     prelude::{Color as BevyColor, *},
-    time::common_conditions::on_timer,
     utils::{Duration, HashMap},
-    window::{PrimaryWindow, WindowResized, WindowResolution},
 };
 
 use ratatui::{
@@ -15,13 +13,10 @@ use ratatui::{
     buffer::{Buffer, Cell},
     layout::{Rect, Size},
     style::{Color as RatColor, Modifier},
-    terminal::Terminal as RatTerminal,
 };
 
-use crate::VirtualCell;
 use crate::components::FromRatCell;
-
-
+use crate::VirtualCell;
 
 ///RATATUI SPECIFIC STUFF STARTS HERE
 ///

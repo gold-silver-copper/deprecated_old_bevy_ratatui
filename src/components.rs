@@ -1,29 +1,17 @@
-
-
-use bevy::{
-    prelude::{Color as BevyColor, Component},
-
-};
+use bevy::prelude::{Color as BevyColor, Component};
 
 use ratatui::{
-   
-    buffer::{ Cell},
-   
+    buffer::Cell,
     style::{Color as RatColor, Modifier},
     terminal::Terminal as RatTerminal,
 };
 
-
 use crate::BevyBackend;
-
-
 
 #[derive(Component, Debug, Clone)]
 pub struct TerminalComponent {
     pub ratatui_terminal: RatTerminal<BevyBackend>,
 }
-
-
 
 #[derive(Component, Debug, Clone, PartialEq)]
 pub struct SlowBlink {
@@ -125,7 +113,7 @@ impl FromRatCell for VirtualCell {
 }
 
 impl FromRatColor<RatColor> for BevyColor {
-     fn from_rat_color(color: RatColor, fg: bool) -> Self {
+    fn from_rat_color(color: RatColor, fg: bool) -> Self {
         match color {
             RatColor::Reset => {
                 if fg {
@@ -161,7 +149,7 @@ trait FromAnsi<u8> {
 }
 
 impl FromAnsi<u8> for BevyColor {
-     fn from_ansi(beep: u8) -> BevyColor {
+    fn from_ansi(beep: u8) -> BevyColor {
         BevyColor::rgb_u8(beep, beep, beep)
     }
 }

@@ -7,19 +7,9 @@ use bevy::{
     window::{PrimaryWindow, WindowResized, WindowResolution},
 };
 
-use ratatui::{
-    backend::{Backend, ClearType, WindowSize},
-    buffer::{Buffer, Cell},
-    layout::{Rect, Size},
-    style::{Color as RatColor, Modifier},
-    terminal::Terminal as RatTerminal,
-};
-
-use crate::BevyBackend;
-use crate::components::{TerminalComponent,VirtualCell,SlowBlink,RapidBlink};
 use crate::components::FromRatCell;
-
-
+use crate::components::{RapidBlink, SlowBlink, TerminalComponent, VirtualCell};
+use crate::BevyBackend;
 
 ///Provides Bevy Plugin which creates terminal like window supporting Ratatui
 pub struct RatatuiPlugin;
@@ -71,15 +61,11 @@ impl Plugin for RatatuiPlugin {
         );
         app.add_systems(
             PostUpdate,
-            (update_ents_from_vcupdate)
-                .run_if(in_state(TermState::AllTermsInited))
-                .run_if(on_timer(Duration::from_millis(20))),
+            (update_ents_from_vcupdate).run_if(in_state(TermState::AllTermsInited)),
         );
         app.add_systems(
             PostUpdate,
-            (update_ents_from_vcupdate)
-                .run_if(in_state(TermState::TermNeedsIniting))
-                .run_if(on_timer(Duration::from_millis(20))),
+            (update_ents_from_vcupdate).run_if(in_state(TermState::TermNeedsIniting)),
         );
         app.add_systems(
             Update,
@@ -103,9 +89,6 @@ impl Plugin for RatatuiPlugin {
     }
 }
 
-
-
-
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Default, States)]
 enum TermState {
     #[default]
@@ -125,9 +108,6 @@ enum TermSizing {
     TermNeedsFirstResize,
     TermGood,
 }
-
-
-
 
 fn do_first_resize(
     mut commands: Commands,
