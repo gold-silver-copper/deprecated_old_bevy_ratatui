@@ -1,16 +1,14 @@
-use std::io;
+
 
 use bevy::{
-    prelude::{Color as BevyColor, *},
-    time::common_conditions::on_timer,
-    utils::{Duration, HashMap},
-    window::{PrimaryWindow, WindowResized, WindowResolution},
+    prelude::{Color as BevyColor, Component},
+
 };
 
 use ratatui::{
-    backend::{Backend, ClearType, WindowSize},
-    buffer::{Buffer, Cell},
-    layout::{Rect, Size},
+   
+    buffer::{ Cell},
+   
     style::{Color as RatColor, Modifier},
     terminal::Terminal as RatTerminal,
 };
