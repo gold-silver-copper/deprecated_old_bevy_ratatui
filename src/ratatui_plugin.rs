@@ -134,7 +134,7 @@ fn do_first_resize(
 
     let mut waat = TextStyle::default();
 
-    if termy_backend.normal_font_path != "" {
+    if termy_backend.normal_font_path != None {
         waat = TextStyle {
             font: termy_backend.normal_handle.clone(),
             font_size: termy_backend.term_font_size as f32,
@@ -225,7 +225,7 @@ fn clear_virtual_cells(
 
     let mut waat = TextStyle::default();
 
-    if termy_backend.normal_font_path != "" {
+    if termy_backend.normal_font_path != None {
         waat = TextStyle {
             font: termy_backend.normal_handle.clone(),
             font_size: termy_backend.term_font_size as f32,
@@ -279,7 +279,7 @@ fn update_cursor(
 
     let mut waat = TextStyle::default();
 
-    if termy_backend.normal_font_path != "" {
+    if termy_backend.normal_font_path != None {
         waat = TextStyle {
             font: termy_backend.normal_handle.clone(),
             font_size: termy_backend.term_font_size as f32,
@@ -335,7 +335,7 @@ fn init_virtual_cells(
 
     let mut waat = TextStyle::default();
 
-    if termy_backend.normal_font_path != "" {
+    if termy_backend.normal_font_path != None {
         waat = TextStyle {
             font: termy_backend.normal_handle.clone(),
             font_size: termy_backend.term_font_size as f32,
@@ -357,7 +357,7 @@ fn init_virtual_cells(
             let ratcell = termy_backend.buffer.get(x, y);
             let vcell = commands
                 .spawn((
-                    CellComponent::from_cell(x, y, ratcell),
+                    CellComponent::from_cell(ratcell),
                     TextBundle::from_section(ratcell.symbol(), waat.clone()).with_style(Style {
                         top: Val::Px(y as f32 * node_size.y),
                         left: Val::Px(x as f32 * node_size.x),
@@ -391,7 +391,7 @@ fn update_ents_from_vcupdate(
             Some(wow) => {
                 commands
                     .entity(wow.clone())
-                    .insert(CellComponent::from_cell(x, y, &vc));
+                    .insert(CellComponent::from_cell( &vc));
                 ()
             }
             None => (),
@@ -446,6 +446,7 @@ fn update_ents_from_comp(
             Entity,
             &Node,
             &CellComponent,
+            &Style,
             Option<&SlowBlink>,
             Option<&RapidBlink>,
         ),
@@ -461,7 +462,7 @@ fn update_ents_from_comp(
     let termy_backend = termy.backend();
     let fontsize = termy_backend.term_font_size as f32;
 
-    for (entity_id, nodik, cellii, sbo, rbo) in query_cells.iter() {
+    for (entity_id, nodik, cellii, stylik, sbo, rbo) in query_cells.iter() {
         if !cellii.skip() {
             let node_size = nodik.size();
 
@@ -470,36 +471,28 @@ fn update_ents_from_comp(
             let mut no_font = true;
 
             if (cellii.bold() && cellii.italic()) {
-                if termy_backend.italicbold_font_path != "" {
+                if termy_backend.italicbold_font_path != None {
                     no_font = false
                 }
                 proper_font = termy_backend.italicbold_handle.clone();
             } else if (cellii.bold()) {
-                if termy_backend.bold_font_path != "" {
+                if termy_backend.bold_font_path != None {
                     no_font = false
                 }
                 proper_font = termy_backend.bold_handle.clone();
             } else if (cellii.italic()) {
-                if termy_backend.italic_font_path != "" {
+                if termy_backend.italic_font_path != None {
                     no_font = false
                 }
                 proper_font = termy_backend.italic_handle.clone();
             } else {
-                if termy_backend.normal_font_path != "" {
+                if termy_backend.normal_font_path != None {
                     no_font = false
                 }
                 proper_font = termy_backend.normal_handle.clone();
             }
 
-            let mut proper_value = cellii.cell.symbol().to_string();
-
-            if cellii.underlined() {
-                proper_value = format!("{}{}", proper_value, '\u{0332}');
-            }
-
-            if cellii.crossed_out() {
-                proper_value = format!("{}{}", proper_value, '\u{0336}');
-            }
+           
 
             let mut proper_fg = cellii.fg();
 
@@ -566,15 +559,10 @@ fn update_ents_from_comp(
             }
 
             commands.entity(entity_id).insert(
-                TextBundle::from_section(proper_value, waat)
+                TextBundle::from_section(cellii.proper_symbol(), waat)
                     .with_background_color(proper_bg)
                     .with_text_justify(JustifyText::Center)
-                    .with_style(Style {
-                        top: Val::Px(cellii.row as f32 * node_size.y),
-                        left: Val::Px(cellii.column as f32 * node_size.x),
-
-                        ..default()
-                    }),
+                    .with_style(stylik.clone()),
             );
         }
     }
@@ -590,17 +578,17 @@ fn font_setup(
         .expect("More than one terminal with a bevybackend");
     let mut termy_backend = termy.ratatui_terminal.backend_mut();
 
-    if termy_backend.normal_font_path != "" {
-        termy_backend.normal_handle = asset_server.load(&termy_backend.normal_font_path);
+    if let Some(x) = &termy_backend.normal_font_path {
+        termy_backend.normal_handle = asset_server.load(x);
     }
-    if termy_backend.italic_font_path != "" {
-        termy_backend.italic_handle = asset_server.load(&termy_backend.italic_font_path);
+    if let Some(x) = &termy_backend.italic_font_path  {
+        termy_backend.italic_handle = asset_server.load(x);
     }
-    if termy_backend.bold_font_path != "" {
-        termy_backend.bold_handle = asset_server.load(&termy_backend.bold_font_path);
+    if let Some(x) = &termy_backend.bold_font_path  {
+        termy_backend.bold_handle = asset_server.load(x);
     }
-    if termy_backend.italicbold_font_path != "" {
-        termy_backend.italicbold_handle = asset_server.load(&termy_backend.italicbold_font_path);
+    if let Some(x) = &termy_backend.italicbold_font_path  {
+        termy_backend.italicbold_handle = asset_server.load(x);
     }
 
     app_state.set(TermState::TermNeedsClearing);

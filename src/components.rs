@@ -33,28 +33,21 @@ pub struct RapidBlink {
 #[derive(Component, Debug, Clone)]
 pub struct CellComponent {
     pub cell: Cell,
-    pub row: u16,
-    pub column: u16,
 }
 
 impl CellComponent {
-    pub fn new(x: u16, y: u16) -> Self {
+    pub fn new() -> Self {
         CellComponent {
             cell: Cell::default(),
-            row: y,
-            column: x,
         }
     }
 
-    pub fn from_cell(x: u16, y: u16, cell: &Cell) -> Self {
+    pub fn from_cell(cell: &Cell) -> Self {
         CellComponent {
             cell: cell.clone(),
-            row: y,
-            column: x,
         }
     }
 
-    pub fn set_fg_to_bg() {}
 
     pub fn fg(&self) -> BevyColor {
         BevyColor::from_rat_color(self.cell.fg, true)
@@ -96,12 +89,23 @@ impl CellComponent {
         self.cell.skip
     }
 
-    pub fn x(&self) -> u16 {
-        self.column
+    pub fn proper_symbol(&self) -> String {
+
+        let mut proper_value = self.cell.symbol().to_string();
+
+        if self.underlined() {
+            proper_value = format!("{}{}", proper_value, '\u{0332}');
+        }
+
+        if self.crossed_out() {
+            proper_value = format!("{}{}", proper_value, '\u{0336}');
+        }
+        proper_value
+
+
     }
-    pub fn y(&self) -> u16 {
-        self.row
-    }
+
+ 
 }
 
 impl FromRatColor<RatColor> for BevyColor {
