@@ -4,18 +4,17 @@
 use std::io;
 
 use bevy::{
-    prelude::{Color as BevyColor, *},
-    utils::{Duration, HashMap},
+    prelude::{ *},
+    utils::{ HashMap},
 };
 
 use ratatui::{
     backend::{Backend, ClearType, WindowSize},
     buffer::{Buffer, Cell},
     layout::{Rect, Size},
-    style::{Color as RatColor, Modifier},
+  
 };
 
-use crate::CellComponent;
 
 ///RATATUI SPECIFIC STUFF STARTS HERE
 ///
