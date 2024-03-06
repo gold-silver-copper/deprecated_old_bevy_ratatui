@@ -1,4 +1,4 @@
-use bevy::prelude::{Color as BevyColor, Component};
+use bevy::prelude::{default, Color as BevyColor, Component, TextStyle , Handle};
 
 use ratatui::{
     buffer::Cell,
@@ -11,6 +11,50 @@ use crate::BevyBackend;
 #[derive(Component, Debug, Clone)]
 pub struct TerminalComponent {
     pub ratatui_terminal: RatTerminal<BevyBackend>,
+    
+}
+
+pub enum FontStyle {
+    Normal,
+    Bold,
+    Italic,
+    ItalicBold
+}
+
+
+impl TerminalComponent {
+    pub fn normal_style(&self , color: BevyColor, font_style: FontStyle) -> TextStyle {
+        let rat_term = &self.ratatui_terminal;
+        let termy_backend = rat_term.backend();
+
+        let boop = match font_style {
+            FontStyle::Normal => termy_backend.normal_handle.clone(),
+            FontStyle::Bold => termy_backend.bold_handle.clone(),
+            FontStyle::Italic => termy_backend.italic_handle.clone(),
+            FontStyle::ItalicBold => termy_backend.italicbold_handle.clone(),
+
+
+
+
+        };
+
+        if boop != Handle::weak_from_u128(101) {
+            TextStyle {
+                font: boop,
+                font_size: termy_backend.term_font_size as f32,
+                color: color,
+
+                ..default()
+            }
+        } else {
+            TextStyle {
+                font_size: termy_backend.term_font_size as f32,
+                color: color,
+
+                ..default()
+            }
+        }
+    }
 }
 
 #[derive(Component, Debug, Clone, PartialEq)]
@@ -43,11 +87,8 @@ impl CellComponent {
     }
 
     pub fn from_cell(cell: &Cell) -> Self {
-        CellComponent {
-            cell: cell.clone(),
-        }
+        CellComponent { cell: cell.clone() }
     }
-
 
     pub fn fg(&self) -> BevyColor {
         BevyColor::from_rat_color(self.cell.fg, true)
@@ -90,7 +131,6 @@ impl CellComponent {
     }
 
     pub fn proper_symbol(&self) -> String {
-
         let mut proper_value = self.cell.symbol().to_string();
 
         if self.underlined() {
@@ -101,16 +141,11 @@ impl CellComponent {
             proper_value = format!("{}{}", proper_value, '\u{0336}');
         }
         proper_value
-
-
     }
 
-    pub fn proper_fg_bg(&self) -> (BevyColor,BevyColor) {
-
+    pub fn proper_fg_bg(&self) -> (BevyColor, BevyColor) {
         let mut proper_fg = self.fg();
         let mut proper_bg = self.bg();
-
-
 
         if self.reversed() {
             let col_buf = proper_fg.clone();
@@ -129,15 +164,8 @@ impl CellComponent {
             proper_fg = proper_bg.clone();
         }
 
-        (proper_fg,proper_bg)
-
-        
+        (proper_fg, proper_bg)
     }
-
-
-
-
- 
 }
 
 impl FromRatColor<RatColor> for BevyColor {
