@@ -8,7 +8,7 @@
 [![Rust](https://github.com/gold-silver-copper/bevy_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bevy_ratatui/actions)
 
 This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integration for the [Bevy](https://github.com/bevyengine/bevy) game engine.
-Please help with pull requests, and be aware that it's a bit buggy and unoptimized :D Breaking changes are quite likely in the near future.
+Please help with pull requests, and be aware that it's a bit buggy and unoptimized :D Breaking changes are quite likely in the near future. PLEASE LOOK AT THE EXAMPLES FOLDER 
 
 **Trying out:**
 
