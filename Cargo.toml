@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ratatui"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "Ratatui in bevy !! See examples . "
 license = "MIT OR Apache-2.0"
