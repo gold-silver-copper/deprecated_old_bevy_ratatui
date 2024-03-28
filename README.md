@@ -2,7 +2,7 @@
 # `bevy_ratatui`
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
-[![Documentation](https://docs.rs/bevy_ratatui/badge.svg)](https://docs.rs/bevy_ratatui/0.1.2/bevy_ratatui/)
+[![Documentation](https://docs.rs/bevy_ratatui/badge.svg)](https://docs.rs/bevy_ratatui/0.2.0/bevy_ratatui/index.html)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bevyengine/bevy/blob/master/LICENSE)
 [![Downloads](https://img.shields.io/crates/d/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
 [![Rust](https://github.com/gold-silver-copper/bevy_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bevy_ratatui/actions)
