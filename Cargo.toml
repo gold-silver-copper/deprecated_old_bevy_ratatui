@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ratatui"
-version = "0.1.8"
+version = "0.2.1"
 edition = "2021"
 description = "Ratatui in bevy !! See examples . "
 license = "MIT OR Apache-2.0"
@@ -17,7 +17,27 @@ exclude = [
 [dependencies]
 
 
-bevy = { version = "0.13.0",  default-features = true}
+bevy = { version = "0.13.0",  default-features = false, features = [ 
+  "bevy_asset",
+
+
+  "bevy_scene",
+  "bevy_winit",
+  "bevy_core_pipeline",
+
+  "bevy_render",
+  "bevy_sprite",
+  "bevy_text",
+  "bevy_ui",
+  "multi-threaded",
+  "png",
+ 
+  "bevy_gizmos",
+
+ 
+  "default_font",
+  
+]}
 ratatui = { version = "0.26.1",  default-features = false }
 
 [dev-dependencies]
