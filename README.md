@@ -40,5 +40,5 @@ https://github.com/ratatui-org/awesome-ratatui
 **Note:** if you're looking for a `bevy_ratatui` version that supports `main` branch of Bevy, check out [open PRs](https://github.com/gold-silver-copper/bevy_ratatui/pulls), there's a great chance we've already started working on the future Bevy release support.
 
 | bevy | bevy_ratatui |
-|------|-----------|
-| 0.13 | 0.1      |
+|--------|---------|
+| 0.13.0 | 0.1 0.2 |
