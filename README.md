@@ -1,11 +1,17 @@
 
-# `bevy_ratatui`
+ `bevy_ratatui`
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
 [![Documentation](https://docs.rs/bevy_ratatui/badge.svg)](https://docs.rs/bevy_ratatui/0.2.0/bevy_ratatui/index.html)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bevyengine/bevy/blob/master/LICENSE)
 [![Downloads](https://img.shields.io/crates/d/bevy_ratatui.svg)](https://crates.io/crates/bevy_ratatui)
 [![Rust](https://github.com/gold-silver-copper/bevy_ratatui/workflows/CI/badge.svg)](https://github.com/gold-silver-copper/bevy_ratatui/actions)
+
+# THIS IS DEPRECATED USE MY OTHER CRATE ratframe or on github ratatui_egui_wasm
+# it can be combined with bevy_egui to create a much better experience than with this old crate
+https://github.com/gold-silver-copper/ratatui_egui_wasm
+https://github.com/gold-silver-copper/ratatui_egui_wasm
+https://github.com/gold-silver-copper/ratatui_egui_wasm
 
 This crate provides an [Ratatui](https://github.com/ratatui-org/ratatui) integration for the [Bevy](https://github.com/bevyengine/bevy) game engine.
 Please help with pull requests, and be aware that it's a bit buggy and unoptimized :D Breaking changes are quite likely in the near future. PLEASE LOOK AT THE EXAMPLES FOLDER 
